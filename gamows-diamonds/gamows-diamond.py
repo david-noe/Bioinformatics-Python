@@ -1,5 +1,4 @@
 # Helper functions
-
 def assemble_codons():
     bases = ['A', 'T', 'G', 'C']
     codons = []
@@ -45,11 +44,13 @@ def create_possible_diamonds(input_codon: list) -> list:
     return possible_diamonds
 
 
-def extract_sub_list(dic: dict) -> list:
+def extract_unique_sub_list(dic: dict) -> list:
     lys = []
     for key in dic:
         value = dic[key]
-        lys.append(value)
+        value.sort()
+        if value not in lys:
+            lys.append(value)
     return lys
 
 
@@ -59,12 +60,13 @@ def create_final_list(input_codons):
         curr_codon = input_codons[i]
         curr_diamonds = create_possible_diamonds([curr_codon])
         for diamond in curr_diamonds:
-            if diamond in dic:
+            if diamond in dic and curr_codon not in dic[diamond]:
                 dic[diamond].append(curr_codon)
-            else:
+            elif diamond not in dic:
                 dic[diamond] = [curr_codon]
 
-    lys = extract_sub_list(dic)
+    lys = extract_unique_sub_list(dic)
+    lys.sort()
     return lys
 
 
@@ -73,4 +75,4 @@ codon_list = assemble_codons()
 final_list = create_final_list(codon_list)
 
 print(final_list)
-
+print(final_list[5][1])
